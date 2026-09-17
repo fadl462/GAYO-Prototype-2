@@ -1,1651 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GAYO MIOMS · My Workspace</title>
-  <!-- Gill Sans Nova fallback: use system sans-serif stack -->
-  <style>
-    /* ----- GAYO BRAND GUIDELINES ----- */
-    /* Colours */
-    :root {
-      --gayo-green: #007A3D;        /* Dark Spring Green – primary */
-      --gayo-lime: #8CC63F;         /* Lime Green – primary */
-      --gayo-black: #1A1A1A;        /* Nero – primary */
-      --gayo-blue: #1A3A5C;         /* Sailor Blue – secondary */
-      --gayo-mint: #A8E6CF;         /* Mint – secondary */
-      --gayo-white: #FFFFFF;
-      --gayo-gray: #F5F5F5;
-      --gayo-dark-gray: #4A4A4A;
-      --gayo-light-gray: #E0E0E0;
-      --gayo-bg: #F9FAFB;
-      --gayo-card-bg: #FFFFFF;
-      --gayo-border: #E5E7EB;
-      --gayo-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --gayo-radius: 8px;
-      --gayo-radius-sm: 4px;
-      --gayo-font: 'Gill Sans Nova', 'Gill Sans', 'Century Gothic', 'Trebuchet MS', sans-serif;
-      --gayo-transition: all 0.15s ease;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--gayo-font);
-      background-color: var(--gayo-bg);
-      color: var(--gayo-black);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ----- LAYOUT ----- */
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* ----- SIDEBAR (Global MIOMS Navigation) ----- */
-    .sidebar {
-      width: 260px;
-      background-color: var(--gayo-white);
-      border-right: 1px solid var(--gayo-border);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .sidebar-header {
-      padding: 20px 18px 16px;
-      border-bottom: 1px solid var(--gayo-border);
-    }
-
-    .sidebar-header .brand {
-      font-weight: 700;
-      font-size: 18px;
-      color: var(--gayo-green);
-      letter-spacing: 0.5px;
-    }
-
-    .sidebar-header .sub {
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--gayo-dark-gray);
-      line-height: 1.3;
-      margin-top: 2px;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      padding: 12px 0;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 18px;
-      font-size: 14px;
-      color: var(--gayo-black);
-      text-decoration: none;
-      transition: var(--gayo-transition);
-      border-left: 3px solid transparent;
-      cursor: default;
-    }
-
-    .nav-item:hover {
-      background-color: var(--gayo-gray);
-    }
-
-    .nav-item.active {
-      background-color: #E8F5E9;
-      border-left-color: var(--gayo-green);
-      color: var(--gayo-green);
-      font-weight: 600;
-    }
-
-    .nav-item .icon {
-      font-size: 16px;
-      width: 20px;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .nav-item .badge {
-      margin-left: auto;
-      background-color: var(--gayo-green);
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 10px;
-    }
-
-    .sidebar-footer {
-      padding: 16px 18px;
-      border-top: 1px solid var(--gayo-border);
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .sidebar-footer .role {
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    /* ----- MAIN CONTENT ----- */
-    .main {
-      flex: 1;
-      min-width: 0;
-      padding: 24px 28px 48px;
-      overflow-y: auto;
-    }
-
-    /* ----- HEADER ----- */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .header-left h1 {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--gayo-black);
-      letter-spacing: -0.3px;
-    }
-
-    .header-left p {
-      font-size: 15px;
-      color: var(--gayo-dark-gray);
-      margin-top: 2px;
-    }
-
-    .header-left .meta {
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-      margin-top: 6px;
-    }
-
-    .header-left .meta strong {
-      color: var(--gayo-green);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-      padding-top: 4px;
-    }
-
-    .header-right .status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .header-right .status .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--gayo-green);
-      display: inline-block;
-    }
-
-    /* ----- SEARCH ----- */
-    .search-bar {
-      margin-bottom: 28px;
-    }
-
-    .search-bar input {
-      width: 100%;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-family: var(--gayo-font);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      background-color: var(--gayo-white);
-      color: var(--gayo-black);
-      outline: none;
-      transition: var(--gayo-transition);
-    }
-
-    .search-bar input:focus {
-      border-color: var(--gayo-green);
-      box-shadow: 0 0 0 3px rgba(0, 122, 61, 0.1);
-    }
-
-    .search-bar input::placeholder {
-      color: #9CA3AF;
-    }
-
-    .search-categories {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-      flex-wrap: wrap;
-    }
-
-    .search-categories span {
-      cursor: default;
-    }
-
-    .search-categories span:hover {
-      color: var(--gayo-green);
-    }
-
-    .search-categories .sep {
-      color: var(--gayo-border);
-    }
-
-    /* ----- CARDS & SECTIONS ----- */
-    .section {
-      margin-bottom: 32px;
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--gayo-black);
-      margin-bottom: 14px;
-      letter-spacing: -0.2px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .section-title .count {
-      font-weight: 400;
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 18px 20px;
-      box-shadow: var(--gayo-shadow);
-    }
-
-    /* ----- WORK SUMMARY METRICS ----- */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-    }
-
-    .metric-card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 16px 18px;
-      box-shadow: var(--gayo-shadow);
-      text-align: left;
-    }
-
-    .metric-card .value {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--gayo-black);
-      line-height: 1.1;
-    }
-
-    .metric-card .label {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-      margin-top: 4px;
-      font-weight: 400;
-    }
-
-    .metric-card .value.warning {
-      color: #D97706;
-    }
-
-    .metric-card .value.danger {
-      color: #DC2626;
-    }
-
-    .metric-card .value.success {
-      color: var(--gayo-green);
-    }
-
-    /* ----- PRIORITY ACTIONS ----- */
-    .action-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .action-item {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 16px 18px;
-      box-shadow: var(--gayo-shadow);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      border-left: 4px solid var(--gayo-border);
-    }
-
-    .action-item.high {
-      border-left-color: #DC2626;
-    }
-
-    .action-item.medium {
-      border-left-color: #D97706;
-    }
-
-    .action-item.normal {
-      border-left-color: var(--gayo-green);
-    }
-
-    .action-item .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .action-item .priority {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .action-item.high .priority {
-      color: #DC2626;
-    }
-
-    .action-item.medium .priority {
-      color: #D97706;
-    }
-
-    .action-item.normal .priority {
-      color: var(--gayo-green);
-    }
-
-    .action-item .task-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    .action-item .project {
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .action-item .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .action-item .meta-row .due {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .action-item .meta-row .unit {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .action-item .actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      font-family: var(--gayo-font);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: var(--gayo-radius-sm);
-      border: 1px solid transparent;
-      cursor: default;
-      transition: var(--gayo-transition);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-primary {
-      background-color: var(--gayo-green);
-      color: var(--gayo-white);
-      border-color: var(--gayo-green);
-    }
-
-    .btn-primary:hover {
-      background-color: #006633;
-    }
-
-    .btn-outline {
-      background-color: transparent;
-      color: var(--gayo-green);
-      border-color: var(--gayo-green);
-    }
-
-    .btn-outline:hover {
-      background-color: #E8F5E9;
-    }
-
-    .btn-ghost {
-      background-color: transparent;
-      color: var(--gayo-dark-gray);
-      border-color: var(--gayo-border);
-    }
-
-    .btn-ghost:hover {
-      background-color: var(--gayo-gray);
-    }
-
-    .btn-sm {
-      font-size: 11px;
-      padding: 4px 10px;
-    }
-
-    /* ----- PROJECT CARDS ----- */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .project-card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 18px 20px;
-      box-shadow: var(--gayo-shadow);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .project-card .proj-name {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--gayo-black);
-    }
-
-    .project-card .proj-code {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .project-card .progress-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .project-card .progress-row .pct {
-      font-weight: 700;
-      color: var(--gayo-black);
-    }
-
-    .project-card .progress-row .status {
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .project-card .status.on-track {
-      color: var(--gayo-green);
-    }
-
-    .project-card .status.at-risk {
-      color: #D97706;
-    }
-
-    .project-card .status.behind {
-      color: #DC2626;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background-color: var(--gayo-light-gray);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 2px;
-    }
-
-    .progress-bar .fill {
-      height: 100%;
-      border-radius: 3px;
-      background-color: var(--gayo-green);
-      transition: width 0.3s ease;
-    }
-
-    .progress-bar .fill.warning {
-      background-color: #D97706;
-    }
-
-    .progress-bar .fill.danger {
-      background-color: #DC2626;
-    }
-
-    .project-card .milestone {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-      margin-top: 4px;
-    }
-
-    .project-card .proj-action {
-      margin-top: 6px;
-    }
-
-    /* ----- CALENDAR / DEADLINES ----- */
-    .deadline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .deadline-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      box-shadow: var(--gayo-shadow);
-    }
-
-    .deadline-item .date-badge {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--gayo-green);
-      background-color: #E8F5E9;
-      padding: 4px 10px;
-      border-radius: var(--gayo-radius-sm);
-      white-space: nowrap;
-      min-width: 68px;
-      text-align: center;
-    }
-
-    .deadline-item .date-badge.today {
-      background-color: var(--gayo-green);
-      color: var(--gayo-white);
-    }
-
-    .deadline-item .date-badge.tomorrow {
-      background-color: #FFF3E0;
-      color: #D97706;
-    }
-
-    .deadline-item .deadline-info {
-      flex: 1;
-    }
-
-    .deadline-item .deadline-info .title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    .deadline-item .deadline-info .time {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-    }
-
-    /* ----- APPROVALS TABLE ----- */
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: var(--gayo-radius);
-      border: 1px solid var(--gayo-border);
-      background-color: var(--gayo-card-bg);
-      box-shadow: var(--gayo-shadow);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      min-width: 600px;
-    }
-
-    thead {
-      background-color: var(--gayo-gray);
-    }
-
-    th {
-      text-align: left;
-      padding: 12px 16px;
-      font-weight: 600;
-      color: var(--gayo-dark-gray);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      border-bottom: 1px solid var(--gayo-border);
-    }
-
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--gayo-border);
-      color: var(--gayo-black);
-      vertical-align: middle;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    tr:hover td {
-      background-color: #FAFAFA;
-    }
-
-    .td-actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    /* ----- INDICATORS ----- */
-    .indicator-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .indicator-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      box-shadow: var(--gayo-shadow);
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .indicator-item .ind-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .indicator-item .ind-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    .indicator-item .ind-target {
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-    }
-
-    .indicator-item .ind-actual {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    .indicator-item .ind-status {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-
-    .ind-status.on-track {
-      background-color: #E8F5E9;
-      color: var(--gayo-green);
-    }
-
-    .ind-status.at-risk {
-      background-color: #FFF3E0;
-      color: #D97706;
-    }
-
-    .ind-status.achieved {
-      background-color: #E8F5E9;
-      color: var(--gayo-green);
-    }
-
-    .ind-status.behind {
-      background-color: #FEE2E2;
-      color: #DC2626;
-    }
-
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .filter-bar select {
-      font-family: var(--gayo-font);
-      font-size: 12px;
-      padding: 6px 12px;
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius-sm);
-      background-color: var(--gayo-white);
-      color: var(--gayo-black);
-      outline: none;
-      cursor: default;
-    }
-
-    .filter-bar select:focus {
-      border-color: var(--gayo-green);
-    }
-
-    /* ----- DATA QUALITY ----- */
-    .quality-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-    }
-
-    .quality-card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 16px;
-      box-shadow: var(--gayo-shadow);
-      text-align: center;
-    }
-
-    .quality-card .q-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--gayo-green);
-    }
-
-    .quality-card .q-label {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-      margin-top: 4px;
-    }
-
-    .attention-list {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .attention-item {
-      font-size: 13px;
-      color: var(--gayo-dark-gray);
-      padding: 6px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .attention-item .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: #D97706;
-      flex-shrink: 0;
-    }
-
-    /* ----- FIELD ACTIVITIES ----- */
-    .field-card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 18px 20px;
-      box-shadow: var(--gayo-shadow);
-    }
-
-    .field-card .field-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 0;
-      font-size: 13px;
-      border-bottom: 1px solid var(--gayo-border);
-    }
-
-    .field-card .field-row:last-child {
-      border-bottom: none;
-    }
-
-    .field-card .field-row .label {
-      color: var(--gayo-dark-gray);
-    }
-
-    .field-card .field-row .value {
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    /* ----- RECENT ACTIVITY ----- */
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .activity-item {
-      display: flex;
-      gap: 16px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--gayo-border);
-      font-size: 13px;
-    }
-
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-
-    .activity-item .time {
-      color: var(--gayo-dark-gray);
-      min-width: 80px;
-      font-size: 12px;
-    }
-
-    .activity-item .desc {
-      color: var(--gayo-black);
-    }
-
-    /* ----- NOTIFICATIONS ----- */
-    .notif-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .notif-item {
-      display: flex;
-      gap: 12px;
-      padding: 12px 16px;
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      box-shadow: var(--gayo-shadow);
-      font-size: 13px;
-      align-items: flex-start;
-    }
-
-    .notif-item .notif-icon {
-      font-size: 16px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .notif-item .notif-body .notif-title {
-      font-weight: 600;
-      color: var(--gayo-black);
-    }
-
-    .notif-item .notif-body .notif-desc {
-      color: var(--gayo-dark-gray);
-      font-size: 12px;
-    }
-
-    /* ----- PERFORMANCE ----- */
-    .perf-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-    }
-
-    .perf-card {
-      background-color: var(--gayo-card-bg);
-      border: 1px solid var(--gayo-border);
-      border-radius: var(--gayo-radius);
-      padding: 16px;
-      box-shadow: var(--gayo-shadow);
-      text-align: center;
-    }
-
-    .perf-card .p-value {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--gayo-green);
-    }
-
-    .perf-card .p-label {
-      font-size: 12px;
-      color: var(--gayo-dark-gray);
-      margin-top: 4px;
-    }
-
-    /* ----- QUICK ACTIONS ----- */
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .quick-actions .btn {
-      font-size: 13px;
-      padding: 8px 18px;
-    }
-
-    /* ----- INSIGHT ----- */
-    .insight-card {
-      background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
-      border: 1px solid #C8E6C9;
-      border-radius: var(--gayo-radius);
-      padding: 20px 24px;
-      box-shadow: var(--gayo-shadow);
-    }
-
-    .insight-card .insight-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--gayo-green);
-      margin-bottom: 6px;
-    }
-
-    .insight-card .insight-text {
-      font-size: 15px;
-      color: var(--gayo-black);
-      font-weight: 500;
-    }
-
-    .insight-card .insight-action {
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    /* ----- MOBILE RESPONSIVE ----- */
-    @media (max-width: 1024px) {
-      .sidebar {
-        width: 220px;
-      }
-    }
-
-    @media (max-width: 820px) {
-      .app {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--gayo-border);
-        max-height: 320px;
-      }
-
-      .sidebar-nav {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 8px 12px;
-        gap: 2px;
-      }
-
-      .nav-item {
-        padding: 8px 12px;
-        font-size: 12px;
-        border-left: none;
-        border-radius: var(--gayo-radius-sm);
-      }
-
-      .nav-item.active {
-        border-left: none;
-        background-color: #E8F5E9;
-      }
-
-      .main {
-        padding: 18px 16px 40px;
-      }
-
-      .header-left h1 {
-        font-size: 20px;
-      }
-
-      .metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .quality-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .perf-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .header-right {
-        width: 100%;
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .metrics-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      .metric-card .value {
-        font-size: 22px;
-      }
-
-      .quality-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .perf-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .action-item .top-row {
-        flex-direction: column;
-      }
-
-      .deadline-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-      }
-
-      .indicator-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .quick-actions .btn {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
-    }
-
-    /* ----- UTILITY ----- */
-    .mt-8 { margin-top: 8px; }
-    .mt-12 { margin-top: 12px; }
-    .mt-16 { margin-top: 16px; }
-    .mb-8 { margin-bottom: 8px; }
-    .mb-12 { margin-bottom: 12px; }
-    .flex { display: flex; }
-    .flex-wrap { flex-wrap: wrap; }
-    .gap-8 { gap: 8px; }
-    .gap-12 { gap: 12px; }
-    .items-center { align-items: center; }
-    .justify-between { justify-content: space-between; }
-    .text-sm { font-size: 13px; }
-    .text-muted { color: var(--gayo-dark-gray); }
-    .font-semibold { font-weight: 600; }
-    .w-full { width: 100%; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIOMS — My Workspace | GAYO Prototype 02</title>
+<style>
+  :root{
+    --green:#008037;       /* Dark Spring Green — GAYO primary */
+    --green-dark:#04331d;  /* derived deep shade for surfaces */
+    --green-deeper:#02220f;
+    --lime:#a7d13d;        /* Lime Green — GAYO primary */
+    --ink:#1a1a1a;          /* Black (Nero) — GAYO primary */
+    --blue:#00203f;         /* Sailor Blue — GAYO secondary */
+    --mint:#adefd1;         /* Mint — GAYO secondary */
+    --paper:#ffffff;
+    --bg:#f5f8f6;
+    --line:#e2e8e4;
+    --muted:#5c6b63;
+    --high:#c1272d;
+    --medium:#d98c00;
+    --radius:10px;
+    --sidebar-w:266px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Gill Sans Nova","Gill Sans MT","Gill Sans",Corbel,"Segoe UI",Calibri,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{margin:0;font-weight:700;}
+  p{margin:0;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- layout shell ---------- */
+  .shell{display:flex;min-height:100vh;}
+
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    width:var(--sidebar-w);
+    flex:0 0 var(--sidebar-w);
+    background:linear-gradient(180deg,var(--green-dark) 0%, var(--green-deeper) 100%);
+    color:#eef7f0;
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0;left:0;bottom:0;
+    z-index:30;
+    transition:transform .25s ease;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:22px 20px 18px;
+    border-bottom:1px solid rgba(255,255,255,.09);
+  }
+  .brand svg{flex:0 0 34px;width:34px;height:34px;}
+  .brand-text .name{font-size:17px;font-weight:700;letter-spacing:.4px;color:#fff;line-height:1.1;}
+  .brand-text .sub{font-size:11px;letter-spacing:.6px;color:var(--lime);font-weight:600;margin-top:2px;}
+  .brand-text .full{font-size:10px;color:rgba(255,255,255,.55);margin-top:5px;line-height:1.3;max-width:170px;}
+
+  nav.mainnav{flex:1;overflow-y:auto;padding:14px 10px;}
+  nav.mainnav a{
+    display:flex;align-items:center;gap:11px;
+    padding:9px 12px;margin-bottom:2px;
+    border-radius:8px;
+    font-size:13.5px;color:rgba(255,255,255,.78);
+    position:relative;
+  }
+  nav.mainnav a svg{width:17px;height:17px;flex:0 0 17px;opacity:.85;}
+  nav.mainnav a:hover{background:rgba(255,255,255,.06);color:#fff;}
+  nav.mainnav a.active{background:var(--green);color:#fff;font-weight:600;}
+  nav.mainnav a.active svg{opacity:1;}
+  nav.mainnav a.active::before{
+    content:"";position:absolute;left:-10px;top:50%;transform:translateY(-50%);
+    width:3px;height:60%;background:var(--lime);border-radius:2px;
+  }
+  nav.mainnav .badge{
+    margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--lime);
+  }
+  nav.mainnav .divider{height:1px;background:rgba(255,255,255,.08);margin:10px 6px;}
+
+  .sidebar-footer{
+    padding:16px 18px 20px;
+    border-top:1px solid rgba(255,255,255,.09);
+    display:flex;align-items:center;gap:10px;
+  }
+  .avatar{
+    width:34px;height:34px;border-radius:50%;
+    background:var(--lime);color:var(--green-deeper);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;flex:0 0 34px;
+  }
+  .sidebar-footer .who .n{font-size:13px;font-weight:600;color:#fff;}
+  .sidebar-footer .who .r{font-size:11px;color:rgba(255,255,255,.55);}
+
+  /* ---------- main column ---------- */
+  .main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column;}
+
+  .topbar{
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    padding:16px 32px;
+    display:flex;align-items:center;gap:20px;
+    position:sticky;top:0;z-index:20;
+  }
+  .menu-toggle{display:none;background:none;border:none;padding:6px;}
+  .menu-toggle svg{width:22px;height:22px;}
+  .search-wrap{flex:1;position:relative;max-width:560px;}
+  .search-wrap input{
+    width:100%;padding:10px 14px 10px 38px;border-radius:8px;
+    border:1px solid var(--line);background:var(--bg);
+    font-size:13.5px;color:var(--ink);
+  }
+  .search-wrap input:focus{outline:2px solid var(--green);outline-offset:1px;}
+  .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);}
+  .search-cats{display:flex;gap:6px;margin-top:6px;font-size:11px;color:var(--muted);flex-wrap:wrap;}
+  .search-cats span{padding:2px 4px;}
+  .search-cats span:not(:last-child)::after{content:"·";margin-left:6px;color:var(--line);}
+
+  .status-pill{
+    display:flex;align-items:center;gap:14px;
+    font-size:12.5px;color:var(--muted);white-space:nowrap;
+  }
+  .status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;box-shadow:0 0 0 3px rgba(0,128,55,.15);}
+  .status-pill .date{font-weight:600;color:var(--ink);}
+
+  .content{padding:28px 32px 60px;max-width:1200px;width:100%;}
+
+  /* ---------- role preview control ---------- */
+  .role-preview{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 18px;margin-bottom:26px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .role-preview .label{font-size:12px;color:var(--muted);flex:0 0 auto;line-height:1.4;max-width:190px;}
+  .role-preview .label b{color:var(--ink);display:block;font-size:12.5px;margin-bottom:1px;}
+  .role-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+  .role-chip{
+    border:1px solid var(--line);background:var(--bg);
+    padding:6px 12px;border-radius:20px;font-size:12px;color:var(--ink);
+    font-weight:600;transition:.15s;
+  }
+  .role-chip:hover{border-color:var(--green);}
+  .role-chip.active{background:var(--green);border-color:var(--green);color:#fff;}
+
+  /* ---------- header block ---------- */
+  .greeting-row{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:28px;gap:20px;flex-wrap:wrap;
+  }
+  .greeting h1{font-size:26px;letter-spacing:-.2px;}
+  .greeting p{color:var(--muted);font-size:14.5px;margin-top:6px;}
+  .greeting .summary-line{margin-top:10px;font-size:13.5px;color:var(--ink);}
+  .greeting .summary-line b{color:var(--green);}
+
+  /* ---------- section shell ---------- */
+  section.block{margin-bottom:34px;transition:opacity .25s ease;}
+  section.block.hidden-role{display:none;}
+  .block-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+  .block-head h2{font-size:16px;}
+  .block-head .hint{font-size:12px;color:var(--muted);}
+  .view-toggle{display:flex;gap:4px;background:var(--bg);border-radius:8px;padding:3px;border:1px solid var(--line);}
+  .view-toggle button{border:none;background:none;padding:5px 12px;font-size:12px;border-radius:6px;color:var(--muted);}
+  .view-toggle button.active{background:var(--paper);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06);}
+
+  /* ---------- my work summary ---------- */
+  .summary-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+  .stat-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 16px 14px;
+  }
+  .stat-card .num{font-size:28px;font-weight:700;line-height:1;color:var(--ink);}
+  .stat-card .lbl{font-size:12px;color:var(--muted);margin-top:6px;}
+  .stat-card .bar{height:4px;border-radius:3px;background:var(--line);margin-top:10px;overflow:hidden;}
+  .stat-card .bar i{display:block;height:100%;background:var(--green);border-radius:3px;}
+  .stat-card.warn .num{color:var(--medium);}
+  .stat-card.warn .bar i{background:var(--medium);}
+  .stat-card.alert .num{color:var(--high);}
+  .stat-card.alert .bar i{background:var(--high);}
+
+  /* ---------- priority actions ---------- */
+  .action-list{display:flex;flex-direction:column;gap:10px;}
+  .action-row{
+    background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--line);
+    border-radius:var(--radius);padding:14px 16px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .action-row.high{border-left-color:var(--high);}
+  .action-row.medium{border-left-color:var(--medium);}
+  .action-row.normal{border-left-color:var(--lime);}
+  .prio-tag{font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:3px 8px;border-radius:5px;flex:0 0 auto;}
+  .prio-tag.high{background:rgba(193,39,45,.1);color:var(--high);}
+  .prio-tag.medium{background:rgba(217,140,0,.1);color:var(--medium);}
+  .prio-tag.normal{background:rgba(167,209,61,.22);color:#5a7217;}
+  .action-body{flex:1;min-width:220px;}
+  .action-body .t{font-size:14px;font-weight:600;}
+  .action-body .meta{font-size:12px;color:var(--muted);margin-top:3px;}
+  .action-btns{display:flex;gap:8px;}
+  .btn{
+    border-radius:7px;padding:7px 14px;font-size:12.5px;font-weight:600;
+    border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  }
+  .btn:hover{border-color:var(--green);}
+  .btn.primary{background:var(--green);border-color:var(--green);color:#fff;}
+  .btn.primary:hover{background:#026b2e;}
+  .btn.ghost{background:none;border:none;color:var(--green);padding:7px 4px;}
+
+  /* ---------- project cards ---------- */
+  .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .project-card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px;display:flex;flex-direction:column;gap:10px;
+  }
+  .project-card .code{font-size:11px;color:var(--muted);letter-spacing:.3px;}
+  .project-card h3{font-size:15px;margin-top:2px;}
+  .progress-row{display:flex;align-items:center;gap:10px;}
+  .progress-row .pct{font-size:13px;font-weight:700;width:38px;flex:0 0 auto;}
+  .progress-track{flex:1;height:7px;border-radius:5px;background:var(--line);overflow:hidden;}
+  .progress-track i{display:block;height:100%;background:var(--green);}
+  .status-tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;display:inline-block;width:fit-content;}
+  .status-tag.ontrack{background:rgba(0,128,55,.1);color:var(--green);}
+  .status-tag.atrisk{background:rgba(217,140,0,.1);color:var(--medium);}
+  .project-card .milestone{font-size:12px;color:var(--muted);}
+  .project-card .milestone b{color:var(--ink);font-weight:600;}
+  .card-link{font-size:12.5px;font-weight:600;color:var(--green);margin-top:auto;}
+
+  /* ---------- two-column layouts ---------- */
+  .split{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:start;}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+
+  /* calendar */
+  .cal-group + .cal-group{margin-top:14px;}
+  .cal-day-label{font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--muted);margin-bottom:8px;}
+  .cal-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .cal-item:last-child{border-bottom:none;}
+  .dot-flag{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+  .dot-flag.high{background:var(--high);}
+  .dot-flag.medium{background:var(--medium);}
+  .dot-flag.normal{background:var(--lime);}
+  .dot-flag.info{background:var(--blue);}
+  .cal-item .txt{flex:1;}
+  .cal-item .time{color:var(--muted);font-size:12px;}
+
+  /* approvals */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  table th{text-align:left;font-size:11px;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line);}
+  table td{padding:10px 8px;border-bottom:1px solid var(--line);}
+  table tr:last-child td{border-bottom:none;}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .row-actions .btn{padding:5px 10px;font-size:11.5px;}
+
+  /* indicators */
+  .indicator-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .chip{font-size:11.5px;border:1px solid var(--line);border-radius:16px;padding:5px 12px;color:var(--muted);}
+  .chip.on{background:var(--bg);color:var(--ink);border-color:var(--ink);}
+  .ind-status{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .ind-status i{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .ind-status.ontrack i{background:var(--green);}
+  .ind-status.ontrack{color:var(--green);}
+  .ind-status.atrisk i{background:var(--medium);}
+  .ind-status.atrisk{color:var(--medium);}
+  .ind-status.achieved i{background:var(--lime);}
+  .ind-status.achieved{color:#5a7217;}
+  .ind-status.behind i{background:var(--high);}
+  .ind-status.behind{color:var(--high);}
+
+  /* data quality */
+  .dq-top{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-bottom:16px;}
+  .dq-score{
+    width:88px;height:88px;border-radius:50%;
+    background:conic-gradient(var(--green) 0% 94%, var(--line) 94% 100%);
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .dq-score span{
+    width:66px;height:66px;border-radius:50%;background:var(--paper);
+    display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;
+  }
+  .dq-label{font-size:13px;color:var(--muted);max-width:220px;}
+  .dq-issues{display:flex;flex-direction:column;gap:6px;font-size:13px;flex:1;min-width:180px;}
+  .dq-issues .row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:5px 0;}
+  .dq-issues .row:last-child{border-bottom:none;}
+  .dq-dims{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .dq-dim{text-align:center;background:var(--bg);border-radius:8px;padding:10px 6px;}
+  .dq-dim .v{font-size:16px;font-weight:700;color:var(--green);}
+  .dq-dim .k{font-size:10.5px;color:var(--muted);margin-top:2px;}
+
+  /* field activity */
+  .field-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px;max-width:520px;}
+  .field-card h3{font-size:15px;margin-bottom:2px;}
+  .field-card .loc{font-size:12.5px;color:var(--muted);margin-bottom:12px;}
+  .field-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-size:13px;margin-bottom:14px;}
+  .field-meta .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.3px;}
+  .field-meta .v{font-weight:600;margin-top:2px;}
+
+  /* recent activity */
+  .activity-item{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-item .time{width:64px;flex:0 0 auto;color:var(--muted);font-size:12px;}
+  .activity-item .text a{color:var(--green);font-weight:600;}
+
+  /* notifications */
+  .notif-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .notif-item:last-child{border-bottom:none;}
+  .notif-item .txt .t{font-size:13px;font-weight:600;}
+  .notif-item .txt .d{font-size:12px;color:var(--muted);margin-top:2px;}
+  .view-all{font-size:12.5px;font-weight:600;color:var(--green);display:block;margin-top:12px;}
+
+  /* performance */
+  .perf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+  .perf-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;text-align:center;}
+  .perf-card .n{font-size:24px;font-weight:700;color:var(--green);}
+  .perf-card .l{font-size:12px;color:var(--muted);margin-top:4px;}
+  .sparkline{margin-top:34px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+  .sparkline .lbl{font-size:12px;color:var(--muted);margin-bottom:8px;}
+
+  /* quick actions */
+  .qa-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .qa-btn{
+    display:flex;align-items:center;gap:7px;
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;
+    padding:9px 14px;font-size:13px;font-weight:600;color:var(--ink);
+  }
+  .qa-btn:hover{border-color:var(--green);color:var(--green);}
+  .qa-btn svg{width:14px;height:14px;}
+
+  /* role-adaptive explainer */
+  .role-map{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;}
+  .role-map .rm-title{font-size:12px;color:var(--muted);margin-bottom:10px;}
+  .role-map .rm-flow{font-size:13.5px;line-height:1.9;}
+  .role-map .rm-flow b{color:var(--green);}
+
+  /* insight */
+  .insight-panel{
+    background:linear-gradient(135deg,var(--green-dark),var(--green));
+    border-radius:var(--radius);padding:22px 26px;color:#fff;
+  }
+  .insight-panel .tag{font-size:11px;letter-spacing:.5px;color:var(--lime);font-weight:700;margin-bottom:8px;}
+  .insight-panel p{font-size:14.5px;line-height:1.6;max-width:640px;}
+  .insight-panel .rec{margin-top:14px;font-size:13.5px;color:rgba(255,255,255,.85);}
+  .insight-panel .rec b{color:#fff;}
+  .insight-btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+  .insight-btns .btn{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff;}
+  .insight-btns .btn:hover{background:rgba(255,255,255,.2);}
+  .insight-btns .btn.primary{background:var(--lime);border-color:var(--lime);color:var(--green-deeper);}
+
+  footer.note{margin-top:40px;font-size:11.5px;color:var(--muted);text-align:center;padding-bottom:20px;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1080px){
+    .summary-grid{grid-template-columns:repeat(3,1fr);}
+    .project-grid{grid-template-columns:repeat(2,1fr);}
+    .split{grid-template-columns:1fr;}
+    .perf-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:760px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);}
+    .main{margin-left:0;}
+    .menu-toggle{display:inline-flex;}
+    .topbar{padding:14px 16px;}
+    .content{padding:18px 16px 50px;}
+    .summary-grid{grid-template-columns:repeat(2,1fr);}
+    .project-grid{grid-template-columns:1fr;}
+    .dq-dims{grid-template-columns:repeat(2,1fr);}
+    .perf-grid{grid-template-columns:repeat(2,1fr);}
+    .role-preview .label{max-width:none;}
+    .action-row{align-items:flex-start;}
+  }
+</style>
 </head>
 <body>
 
-<div class="app">
+<div class="shell">
 
-  <!-- ===== SIDEBAR ===== -->
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">GAYO</div>
-      <div class="sub">MIOMS<br>MERL Integrated<br>Organizational System</div>
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 100 100" fill="none">
+        <g stroke="#a7d13d" stroke-width="5" stroke-linecap="round">
+          <path d="M30 12 A38 38 0 0 1 30 88" opacity=".95"/>
+          <path d="M38 20 A30 30 0 0 1 38 80" opacity=".8"/>
+          <path d="M46 28 A22 22 0 0 1 46 72" opacity=".65"/>
+        </g>
+        <path d="M50 40 L50 62 M50 40 L42 50 M50 40 L58 50" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="50" cy="33" r="2.6" fill="#ffffff"/>
+      </svg>
+      <div class="brand-text">
+        <div class="name">GAYO</div>
+        <div class="sub">MIOMS</div>
+        <div class="full">MERL Integrated Organizational Management System</div>
+      </div>
     </div>
 
-    <div class="sidebar-nav">
-      <a class="nav-item" href="#"><span class="icon">🏠</span> Executive Overview</a>
-      <a class="nav-item active" href="#"><span class="icon">👤</span> My Workspace <span class="badge">8</span></a>
-      <a class="nav-item" href="#"><span class="icon">📋</span> Thematic Areas</a>
-      <a class="nav-item" href="#"><span class="icon">📁</span> Projects</a>
-      <a class="nav-item" href="#"><span class="icon">✅</span> Activities</a>
-      <a class="nav-item" href="#"><span class="icon">📊</span> MERL</a>
-      <a class="nav-item" href="#"><span class="icon">🗄️</span> Data Collection</a>
-      <a class="nav-item" href="#"><span class="icon">👥</span> Beneficiaries</a>
-      <a class="nav-item" href="#"><span class="icon">📍</span> GIS &amp; Locations</a>
-      <a class="nav-item" href="#"><span class="icon">💰</span> Finance</a>
-      <a class="nav-item" href="#"><span class="icon">🏢</span> Departments</a>
-      <a class="nav-item" href="#"><span class="icon">🌍</span> Country Offices</a>
-      <a class="nav-item" href="#"><span class="icon">📄</span> Documents</a>
-      <a class="nav-item" href="#"><span class="icon">📚</span> Knowledge Centre</a>
-      <a class="nav-item" href="#"><span class="icon">🗂️</span> Evidence Repository</a>
-      <a class="nav-item" href="#"><span class="icon">📈</span> Reports &amp; Analytics</a>
-      <a class="nav-item" href="#"><span class="icon">🔔</span> Notifications</a>
-      <a class="nav-item" href="#"><span class="icon">🔗</span> Integrations</a>
-      <a class="nav-item" href="#"><span class="icon">⚙️</span> Administration</a>
-    </div>
+    <nav class="mainnav">
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Executive Overview</a>
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>My Workspace<span class="badge"></span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Thematic Areas</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18v13H3z"/><path d="M3 7l3-4h12l3 4"/></svg>Projects</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg>Activities</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4v8l6 3"/></svg>MERL</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.6 3.6 3 8 3s8-1.4 8-3V6"/><path d="M4 12v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"/></svg>Data Collection</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/><circle cx="18" cy="9" r="2.5"/><path d="M22 21v-1.5a4 4 0 0 0-3-3.9"/></svg>Beneficiaries</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>GIS &amp; Locations</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 .9 3 2.2c0 1.6-1.4 2-3 2.6-1.6.6-3 1.2-3 2.7 0 1.3 1.3 2.2 3 2.2s3-1 3-2.4"/></svg>Finance</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Departments</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18M12 3a13 13 0 0 0 0 18"/></svg>Country Offices</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12h6M9 16h6"/></svg>Documents</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.6 6.2L21 9l-5 4.4L17.4 20 12 16.6 6.6 20 8 13.4 3 9l6.4-.8z"/></svg>Knowledge Centre</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h11l5 5v11H4z"/><path d="M15 4v5h5"/></svg>Evidence Repository</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M11 20V4M18 20v-7"/></svg>Reports &amp; Analytics</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 4-2 5-2 7h16c0-2-2-3-2-7"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>Notifications</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3l4 4-4 4M7 21l-4-4 4-4"/><path d="M21 7H9a4 4 0 0 0-4 4M3 17h12a4 4 0 0 0 4-4"/></svg>Integrations</a>
+      <div class="divider"></div>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Administration</a>
+    </nav>
 
     <div class="sidebar-footer">
-      <div class="role">GAYO</div>
-      <div>Programme Manager</div>
+      <div class="avatar">SM</div>
+      <div class="who">
+        <div class="n">Sarah Mensah</div>
+        <div class="r" id="sidebar-role">Programme Manager</div>
+      </div>
     </div>
-  </nav>
+  </aside>
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="main">
+  <!-- ================= MAIN ================= -->
+  <div class="main">
 
-    <!-- HEADER -->
-    <header class="header">
-      <div class="header-left">
-        <h1>Good morning, Sarah.</h1>
-        <p>Here's what needs your attention today.</p>
-        <div class="meta">
-          You have <strong>8 priority actions</strong>, <strong>3 upcoming deadlines</strong>, and <strong>2 items awaiting approval</strong>.
-        </div>
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search projects, activities, indicators, beneficiaries, documents, evidence…">
+        <div class="search-cats"><span>Projects</span><span>People</span><span>Indicators</span><span>Documents</span><span>Evidence</span><span>Activities</span></div>
       </div>
-      <div class="header-right">
-        <div>Today · 15 September 2026</div>
-        <div class="status"><span class="dot"></span> System Operational</div>
-      </div>
-    </header>
-
-    <!-- SEARCH -->
-    <div class="search-bar">
-      <input type="text" placeholder="Search projects, activities, indicators, beneficiaries, documents, evidence...">
-      <div class="search-categories">
-        <span>Projects</span><span class="sep">|</span>
-        <span>People</span><span class="sep">|</span>
-        <span>Indicators</span><span class="sep">|</span>
-        <span>Documents</span><span class="sep">|</span>
-        <span>Evidence</span><span class="sep">|</span>
-        <span>Activities</span>
+      <div class="status-pill">
+        <span><span class="dot"></span>System Operational</span>
+        <span class="date">15 September 2026</span>
       </div>
     </div>
 
-    <!-- ===== 5. MY WORK SUMMARY ===== -->
-    <section class="section">
-      <h2 class="section-title">My Work</h2>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="value">24</div>
-          <div class="label">Assigned Activities</div>
-        </div>
-        <div class="metric-card">
-          <div class="value warning">7</div>
-          <div class="label">Due This Week</div>
-        </div>
-        <div class="metric-card">
-          <div class="value danger">3</div>
-          <div class="label">Overdue</div>
-        </div>
-        <div class="metric-card">
-          <div class="value">2</div>
-          <div class="label">Pending Approvals</div>
-        </div>
-        <div class="metric-card">
-          <div class="value">6</div>
-          <div class="label">Projects Assigned</div>
-        </div>
-        <div class="metric-card">
-          <div class="value">8</div>
-          <div class="label">Unread Notifications</div>
+    <div class="content">
+
+      <!-- role preview control (prototype-only affordance) -->
+      <div class="role-preview">
+        <div class="label"><b>Preview as role</b>MIOMS adapts this workspace to whoever is signed in — try switching roles below.</div>
+        <div class="role-chips" id="roleChips">
+          <button class="role-chip active" data-role="pm">Programme Manager</button>
+          <button class="role-chip" data-role="exec">Executive</button>
+          <button class="role-chip" data-role="director">Director</button>
+          <button class="role-chip" data-role="merl">MERL Officer</button>
+          <button class="role-chip" data-role="finance">Finance</button>
+          <button class="role-chip" data-role="hr">HR</button>
+          <button class="role-chip" data-role="field">Field Officer</button>
+          <button class="role-chip" data-role="country">Country Office</button>
+          <button class="role-chip" data-role="partner">Partner</button>
         </div>
       </div>
-    </section>
 
-    <!-- ===== 6. PRIORITY ACTIONS ===== -->
-    <section class="section">
-      <h2 class="section-title">Priority Actions <span class="count">3 items</span></h2>
-      <div class="action-list">
+      <!-- header -->
+      <div class="greeting-row">
+        <div class="greeting">
+          <h1 id="greetingText">Good morning, Sarah.</h1>
+          <p>Here's what needs your attention today.</p>
+          <p class="summary-line">You have <b>8</b> priority actions, <b>3</b> upcoming deadlines, and <b>2</b> items awaiting approval.</p>
+        </div>
+      </div>
 
-        <div class="action-item high">
-          <div class="top-row">
-            <span class="priority">🔴 High</span>
-            <div class="actions">
-              <a href="#" class="btn btn-primary btn-sm">Open</a>
-              <a href="#" class="btn btn-outline btn-sm">Complete</a>
+      <!-- 5. my work summary -->
+      <section class="block" data-roles="pm,exec,director,merl,finance,hr,field,country,partner">
+        <div class="block-head"><h2>My Work</h2></div>
+        <div class="summary-grid">
+          <div class="stat-card"><div class="num">24</div><div class="lbl">Assigned activities</div><div class="bar"><i style="width:70%"></i></div></div>
+          <div class="stat-card warn"><div class="num">7</div><div class="lbl">Due this week</div><div class="bar"><i style="width:40%"></i></div></div>
+          <div class="stat-card alert"><div class="num">3</div><div class="lbl">Overdue</div><div class="bar"><i style="width:20%"></i></div></div>
+          <div class="stat-card"><div class="num">2</div><div class="lbl">Pending approvals</div><div class="bar"><i style="width:15%"></i></div></div>
+          <div class="stat-card"><div class="num">6</div><div class="lbl">Projects assigned</div><div class="bar"><i style="width:60%"></i></div></div>
+          <div class="stat-card"><div class="num">8</div><div class="lbl">Unread notifications</div><div class="bar"><i style="width:50%"></i></div></div>
+        </div>
+      </section>
+
+      <!-- 6. priority actions -->
+      <section class="block" data-roles="pm,exec,director,merl,field,partner">
+        <div class="block-head"><h2>Priority Actions</h2><span class="hint">Sorted by urgency</span></div>
+        <div class="action-list">
+          <div class="action-row high">
+            <span class="prio-tag high">HIGH</span>
+            <div class="action-body">
+              <div class="t">Submit Q3 Indicator Update</div>
+              <div class="meta">Zero Waste Accra Initiative · Due today · MERL</div>
+            </div>
+            <div class="action-btns"><button class="btn">Open</button><button class="btn primary">Complete</button></div>
+          </div>
+          <div class="action-row medium">
+            <span class="prio-tag medium">MEDIUM</span>
+            <div class="action-body">
+              <div class="t">Review Project Workplan</div>
+              <div class="meta">Green Jobs for Youth · Due tomorrow · Programme Management</div>
+            </div>
+            <div class="action-btns"><button class="btn">Open</button><button class="btn primary">Review</button></div>
+          </div>
+          <div class="action-row normal">
+            <span class="prio-tag normal">NORMAL</span>
+            <div class="action-body">
+              <div class="t">Upload Field Evidence</div>
+              <div class="meta">Climate Resilience Project · Due in 3 days · Evidence</div>
+            </div>
+            <div class="action-btns"><button class="btn">Open</button><button class="btn primary">Upload</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. my projects -->
+      <section class="block" data-roles="pm,exec,director,country,partner">
+        <div class="block-head"><h2>Projects I'm Working On</h2></div>
+        <div class="project-grid">
+          <div class="project-card">
+            <div class="code">GAYO-ZW-024</div>
+            <h3>Zero Waste Accra Initiative</h3>
+            <div class="progress-row"><span class="pct">84%</span><div class="progress-track"><i style="width:84%"></i></div></div>
+            <span class="status-tag ontrack">On Track</span>
+            <div class="milestone">Next milestone: <b>Quarterly Results Submission</b></div>
+            <a class="card-link" href="#">Open Project →</a>
+          </div>
+          <div class="project-card">
+            <div class="code">GAYO-GJ-011</div>
+            <h3>Youth Green Employment Programme</h3>
+            <div class="progress-row"><span class="pct">67%</span><div class="progress-track"><i style="width:67%;background:var(--medium)"></i></div></div>
+            <span class="status-tag atrisk">At Risk</span>
+            <div class="milestone">Next milestone: <b>Beneficiary Verification</b></div>
+            <a class="card-link" href="#">Open Project →</a>
+          </div>
+          <div class="project-card">
+            <div class="code">GAYO-AR-018</div>
+            <h3>Climate Resilience Communities</h3>
+            <div class="progress-row"><span class="pct">91%</span><div class="progress-track"><i style="width:91%"></i></div></div>
+            <span class="status-tag ontrack">On Track</span>
+            <div class="milestone">Next milestone: <b>Final Evaluation</b></div>
+            <a class="card-link" href="#">Open Project →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 & 9: calendar + approvals -->
+      <section class="block" data-roles="pm,exec,director,merl,finance,hr,field,country">
+        <div class="split">
+          <div class="panel">
+            <div class="block-head" style="margin-bottom:12px;">
+              <h2>Upcoming</h2>
+              <div class="view-toggle">
+                <button class="active">List</button><button>Week</button><button>Month</button>
+              </div>
+            </div>
+            <div class="cal-group">
+              <div class="cal-day-label">TODAY</div>
+              <div class="cal-item"><span class="dot-flag high"></span><span class="txt">Indicator submission</span><span class="time">4:00 PM</span></div>
+            </div>
+            <div class="cal-group">
+              <div class="cal-day-label">TOMORROW</div>
+              <div class="cal-item"><span class="dot-flag medium"></span><span class="txt">Project workplan review</span><span class="time">11:00 AM</span></div>
+            </div>
+            <div class="cal-group">
+              <div class="cal-day-label">18 SEP</div>
+              <div class="cal-item"><span class="dot-flag normal"></span><span class="txt">Donor report approval</span><span class="time">—</span></div>
+            </div>
+            <div class="cal-group">
+              <div class="cal-day-label">21 SEP</div>
+              <div class="cal-item"><span class="dot-flag info"></span><span class="txt">Field monitoring submission</span><span class="time">—</span></div>
             </div>
           </div>
-          <div class="task-name">Submit Q3 Indicator Update</div>
-          <div class="project">Zero Waste Accra Initiative</div>
-          <div class="meta-row">
-            <span class="due">Due today</span>
-            <span class="unit">MERL</span>
+
+          <div class="panel" data-roles-sub="pm,exec,director,merl,finance">
+            <div class="block-head" style="margin-bottom:12px;"><h2>Awaiting My Approval</h2></div>
+            <table>
+              <thead><tr><th>Item</th><th>Project</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>Q3 Indicator Report<br><span style="color:var(--muted);font-size:11.5px;">MERL Officer · 14 Sep</span></td><td>Zero Waste Accra</td><td><div class="row-actions"><button class="btn primary">Approve</button><button class="btn">Review</button></div></td></tr>
+                <tr><td>Budget Revision<br><span style="color:var(--muted);font-size:11.5px;">Project Manager · 13 Sep</span></td><td>Green Jobs</td><td><div class="row-actions"><button class="btn primary">Approve</button><button class="btn">Review</button></div></td></tr>
+                <tr><td>Field Dataset<br><span style="color:var(--muted);font-size:11.5px;">Field Officer · 12 Sep</span></td><td>Climate Resilience</td><td><div class="row-actions"><button class="btn primary">Verify</button><button class="btn">Review</button></div></td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
+      </section>
 
-        <div class="action-item medium">
-          <div class="top-row">
-            <span class="priority">🟡 Medium</span>
-            <div class="actions">
-              <a href="#" class="btn btn-primary btn-sm">Open</a>
-              <a href="#" class="btn btn-outline btn-sm">Review</a>
+      <!-- 10. indicators -->
+      <section class="block" data-roles="pm,exec,merl">
+        <div class="block-head"><h2>Indicator Performance</h2></div>
+        <div class="indicator-filters">
+          <span class="chip on">All Projects</span><span class="chip">Output</span><span class="chip">Outcome</span><span class="chip">Impact</span><span class="chip">This quarter</span>
+        </div>
+        <div class="panel" style="padding:0;">
+          <table>
+            <thead><tr><th>Indicator</th><th>Target</th><th>Actual</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Indicator 01</td><td>100%</td><td>92%</td><td><span class="ind-status ontrack"><i></i>On Track</span></td></tr>
+              <tr><td>Indicator 02</td><td>80%</td><td>64%</td><td><span class="ind-status atrisk"><i></i>At Risk</span></td></tr>
+              <tr><td>Indicator 03</td><td>500</td><td>526</td><td><span class="ind-status achieved"><i></i>Achieved</span></td></tr>
+              <tr><td>Indicator 04</td><td>1,000</td><td>742</td><td><span class="ind-status behind"><i></i>Behind</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 11. data quality -->
+      <section class="block" data-roles="pm,merl">
+        <div class="block-head"><h2>Data Quality Snapshot</h2></div>
+        <div class="panel">
+          <div class="dq-top">
+            <div class="dq-score"><span>94%</span></div>
+            <div class="dq-label">Overall quality score across your active submissions.</div>
+            <div class="dq-issues">
+              <div class="row"><span>Incomplete submissions</span><b>8</b></div>
+              <div class="row"><span>Duplicate records</span><b>3</b></div>
+              <div class="row"><span>Awaiting verification</span><b>5</b></div>
             </div>
           </div>
-          <div class="task-name">Review Project Workplan</div>
-          <div class="project">Green Jobs for Youth</div>
-          <div class="meta-row">
-            <span class="due">Due tomorrow</span>
-            <span class="unit">Programme Management</span>
+          <div class="dq-dims">
+            <div class="dq-dim"><div class="v">97%</div><div class="k">Completeness</div></div>
+            <div class="dq-dim"><div class="v">94%</div><div class="k">Validity</div></div>
+            <div class="dq-dim"><div class="v">92%</div><div class="k">Consistency</div></div>
+            <div class="dq-dim"><div class="v">91%</div><div class="k">Timeliness</div></div>
+          </div>
+          <a class="card-link" style="display:inline-block;margin-top:14px;" href="#">Review Data Quality →</a>
+        </div>
+      </section>
+
+      <!-- 12. field activities -->
+      <section class="block" data-roles="pm,field,country">
+        <div class="block-head"><h2>Field Activity Tracker</h2></div>
+        <div class="field-card">
+          <h3>Community Monitoring Visit</h3>
+          <div class="loc">Accra Metropolitan Area</div>
+          <div class="field-meta">
+            <div><div class="k">Status</div><div class="v">Scheduled</div></div>
+            <div><div class="k">Date</div><div class="v">17 September</div></div>
+            <div><div class="k">Officer</div><div class="v">Michael A.</div></div>
+            <div><div class="k">GPS</div><div class="v">Required</div></div>
+            <div><div class="k">Evidence</div><div class="v">4 items expected</div></div>
+          </div>
+          <button class="btn primary">Open Activity</button>
+        </div>
+      </section>
+
+      <!-- 13 & 14: recent activity + notifications -->
+      <section class="block" data-roles="pm,exec,director,merl,finance,hr,field,country,partner">
+        <div class="split">
+          <div class="panel">
+            <div class="block-head" style="margin-bottom:6px;"><h2>My Recent Activity</h2></div>
+            <div class="activity-item"><span class="time">10:42 AM</span><span class="text">You approved <a href="#">12 indicator submissions</a></span></div>
+            <div class="activity-item"><span class="time">09:30 AM</span><span class="text">You uploaded <a href="#">4 project photographs</a></span></div>
+            <div class="activity-item"><span class="time">Yesterday</span><span class="text">You updated <a href="#">Project Workplan</a></span></div>
+            <div class="activity-item"><span class="time">Yesterday</span><span class="text">You completed <a href="#">Community Monitoring Activity</a></span></div>
+            <div class="activity-item"><span class="time">Monday</span><span class="text">You submitted <a href="#">Q3 MERL Report</a></span></div>
+          </div>
+
+          <div class="panel">
+            <div class="block-head" style="margin-bottom:6px;"><h2>Notifications</h2></div>
+            <div class="notif-item"><span class="dot-flag high" style="margin-top:5px;"></span><div class="txt"><div class="t">Indicator deadline approaching</div><div class="d">Q3 results submission due today.</div></div></div>
+            <div class="notif-item"><span class="dot-flag medium" style="margin-top:5px;"></span><div class="txt"><div class="t">Approval requested</div><div class="d">Project Manager submitted budget revision.</div></div></div>
+            <div class="notif-item"><span class="dot-flag normal" style="margin-top:5px;"></span><div class="txt"><div class="t">Data quality issue</div><div class="d">5 submissions require verification.</div></div></div>
+            <div class="notif-item"><span class="dot-flag info" style="margin-top:5px;"></span><div class="txt"><div class="t">New assignment</div><div class="d">You have been assigned a new field activity.</div></div></div>
+            <a class="view-all" href="#">View All Notifications →</a>
           </div>
         </div>
+      </section>
 
-        <div class="action-item normal">
-          <div class="top-row">
-            <span class="priority">🟢 Normal</span>
-            <div class="actions">
-              <a href="#" class="btn btn-primary btn-sm">Open</a>
-              <a href="#" class="btn btn-outline btn-sm">Upload</a>
-            </div>
-          </div>
-          <div class="task-name">Upload Field Evidence</div>
-          <div class="project">Climate Resilience Project</div>
-          <div class="meta-row">
-            <span class="due">Due in 3 days</span>
-            <span class="unit">Evidence</span>
-          </div>
+      <!-- 15. performance -->
+      <section class="block" data-roles="pm,exec,director,merl,field">
+        <div class="block-head"><h2>My Performance</h2></div>
+        <div class="perf-grid">
+          <div class="perf-card"><div class="n">87%</div><div class="l">Activities completed on time</div></div>
+          <div class="perf-card"><div class="n">91%</div><div class="l">Indicators on target</div></div>
+          <div class="perf-card"><div class="n">96%</div><div class="l">Data quality of submissions</div></div>
+          <div class="perf-card"><div class="n">93%</div><div class="l">Tasks completed</div></div>
         </div>
-
-      </div>
-    </section>
-
-    <!-- ===== 7. MY PROJECTS ===== -->
-    <section class="section">
-      <h2 class="section-title">Projects I'm Working On</h2>
-      <div class="projects-grid">
-
-        <div class="project-card">
-          <div class="proj-name">Zero Waste Accra Initiative</div>
-          <div class="proj-code">Project Code: GAYO-ZW-024</div>
-          <div class="progress-row">
-            <span>Progress</span>
-            <span class="pct">84%</span>
-          </div>
-          <div class="progress-bar"><div class="fill" style="width:84%"></div></div>
-          <div class="progress-row">
-            <span class="text-muted">Status</span>
-            <span class="status on-track">On Track</span>
-          </div>
-          <div class="milestone">Next milestone: Quarterly Results Submission</div>
-          <div class="proj-action">
-            <a href="#" class="btn btn-outline btn-sm">Open Project →</a>
-          </div>
+        <div class="sparkline">
+          <div class="lbl">Overall performance — last 6 reporting periods</div>
+          <svg viewBox="0 0 300 50" width="100%" height="50" preserveAspectRatio="none">
+            <polyline points="0,38 55,32 110,27 165,20 220,15 300,10" fill="none" stroke="#008037" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="300" cy="10" r="3.5" fill="#008037"/>
+          </svg>
         </div>
+      </section>
 
-        <div class="project-card">
-          <div class="proj-name">Youth Green Employment Programme</div>
-          <div class="proj-code">Project Code: GAYO-GJ-011</div>
-          <div class="progress-row">
-            <span>Progress</span>
-            <span class="pct">67%</span>
-          </div>
-          <div class="progress-bar"><div class="fill warning" style="width:67%"></div></div>
-          <div class="progress-row">
-            <span class="text-muted">Status</span>
-            <span class="status at-risk">At Risk</span>
-          </div>
-          <div class="milestone">Next milestone: Beneficiary Verification</div>
-          <div class="proj-action">
-            <a href="#" class="btn btn-outline btn-sm">Open Project →</a>
+      <!-- 16. quick actions -->
+      <section class="block" data-roles="pm,exec,director,merl,finance,hr,field,country,partner">
+        <div class="block-head"><h2>Quick Actions</h2><span class="hint" id="qaHint">Actions shown match your role's permissions</span></div>
+        <div class="qa-row" id="quickActions">
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>New Activity</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Submit Data</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Create Form</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Upload Evidence</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add Beneficiary</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Upload Document</button>
+          <button class="qa-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Submit Report</button>
+        </div>
+      </section>
+
+      <!-- 17. role-adaptive explainer -->
+      <section class="block" data-roles="pm,exec,director,merl,finance,hr,field,country,partner">
+        <div class="block-head"><h2>Role-Adaptive Workspace</h2><span class="hint">This screen is never identical for two users</span></div>
+        <div class="role-map">
+          <div class="rm-title">Current focus for <span id="roleFocusName">Programme Manager</span></div>
+          <div class="rm-flow" id="roleFocusFlow"><b>Projects</b> → Activities → Indicators → Teams → Deliverables</div>
+        </div>
+      </section>
+
+      <!-- 18. insight -->
+      <section class="block" data-roles="pm,exec,director,merl,field,country">
+        <div class="insight-panel">
+          <div class="tag">MIOMS INSIGHT</div>
+          <p>You have 3 overdue activities across 2 projects. One of these activities is linked to an indicator currently below target.</p>
+          <p class="rec"><b>Recommended action:</b> review the affected activity and update its implementation status before the next reporting cycle.</p>
+          <div class="insight-btns">
+            <button class="btn primary">Review Activities</button>
+            <button class="btn">View Indicator</button>
+            <button class="btn">Open Project</button>
           </div>
         </div>
+      </section>
 
-      </div>
-    </section>
+      <footer class="note">GAYO · MIOMS Prototype 02 — My Workspace · Internal design reference, not connected to live data</footer>
 
-    <!-- ===== 8. MY CALENDAR & DEADLINES ===== -->
-    <section class="section">
-      <h2 class="section-title">My Calendar &amp; Deadlines</h2>
-      <div class="deadline-list">
-
-        <div class="deadline-item">
-          <span class="date-badge today">Today</span>
-          <div class="deadline-info">
-            <div class="title">Indicator submission</div>
-            <div class="time">4:00 PM</div>
-          </div>
-        </div>
-
-        <div class="deadline-item">
-          <span class="date-badge tomorrow">Tomorrow</span>
-          <div class="deadline-info">
-            <div class="title">Project workplan review</div>
-            <div class="time">11:00 AM</div>
-          </div>
-        </div>
-
-        <div class="deadline-item">
-          <span class="date-badge">18 SEP</span>
-          <div class="deadline-info">
-            <div class="title">Donor report approval</div>
-            <div class="time">—</div>
-          </div>
-        </div>
-
-        <div class="deadline-item">
-          <span class="date-badge">21 SEP</span>
-          <div class="deadline-info">
-            <div class="title">Field monitoring submission</div>
-            <div class="time">—</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ===== 9. MY APPROVALS ===== -->
-    <section class="section">
-      <h2 class="section-title">Awaiting My Approval</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Project</th>
-              <th>Submitted By</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Q3 Indicator Report</td>
-              <td>Zero Waste Accra</td>
-              <td>MERL Officer</td>
-              <td>14 Sep</td>
-              <td>
-                <div class="td-actions">
-                  <a href="#" class="btn btn-primary btn-sm">Review</a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Budget Revision</td>
-              <td>Green Jobs</td>
-              <td>Project Manager</td>
-              <td>13 Sep</td>
-              <td>
-                <div class="td-actions">
-                  <a href="#" class="btn btn-primary btn-sm">Review</a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Field Dataset</td>
-              <td>Climate Resilience</td>
-              <td>Field Officer</td>
-              <td>12 Sep</td>
-              <td>
-                <div class="td-actions">
-                  <a href="#" class="btn btn-primary btn-sm">Verify</a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mt-8 text-sm text-muted">
-        Actions: <strong>Review</strong> · <strong>Approve</strong> · <strong>Request Changes</strong> · <strong>Reject</strong>
-      </div>
-    </section>
-
-    <!-- ===== 10. MY INDICATORS ===== -->
-    <section class="section">
-      <h2 class="section-title">Indicator Performance</h2>
-      <div class="filter-bar">
-        <select><option>Project</option><option>Zero Waste Accra</option><option>Green Jobs</option></select>
-        <select><option>Indicator Type</option><option>Output</option><option>Outcome</option><option>Impact</option></select>
-        <select><option>Reporting Period</option><option>Q3 2026</option><option>Q2 2026</option></select>
-      </div>
-      <div class="indicator-list">
-        <div class="indicator-item">
-          <div class="ind-left">
-            <span class="ind-name">Indicator 01</span>
-            <span class="ind-target">Target 100%</span>
-            <span class="ind-actual">Actual 92%</span>
-          </div>
-          <span class="ind-status on-track">On Track</span>
-        </div>
-        <div class="indicator-item">
-          <div class="ind-left">
-            <span class="ind-name">Indicator 02</span>
-            <span class="ind-target">Target 80%</span>
-            <span class="ind-actual">Actual 64%</span>
-          </div>
-          <span class="ind-status at-risk">At Risk</span>
-        </div>
-        <div class="indicator-item">
-          <div class="ind-left">
-            <span class="ind-name">Indicator 03</span>
-            <span class="ind-target">Target 500</span>
-            <span class="ind-actual">Actual 526</span>
-          </div>
-          <span class="ind-status achieved">Achieved</span>
-        </div>
-        <div class="indicator-item">
-          <div class="ind-left">
-            <span class="ind-name">Indicator 04</span>
-            <span class="ind-target">Target 1,000</span>
-            <span class="ind-actual">Actual 742</span>
-          </div>
-          <span class="ind-status behind">Behind</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 11. MY DATA QUALITY ===== -->
-    <section class="section">
-      <h2 class="section-title">Data Quality Snapshot</h2>
-      <div class="quality-grid">
-        <div class="quality-card">
-          <div class="q-value">94%</div>
-          <div class="q-label">Overall Quality Score</div>
-        </div>
-        <div class="quality-card">
-          <div class="q-value">97%</div>
-          <div class="q-label">Completeness</div>
-        </div>
-        <div class="quality-card">
-          <div class="q-value">94%</div>
-          <div class="q-label">Validity</div>
-        </div>
-        <div class="quality-card">
-          <div class="q-value">92%</div>
-          <div class="q-label">Consistency</div>
-        </div>
-        <div class="quality-card">
-          <div class="q-value">91%</div>
-          <div class="q-label">Timeliness</div>
-        </div>
-      </div>
-      <div class="attention-list">
-        <div class="attention-item"><span class="dot"></span> 8 incomplete submissions</div>
-        <div class="attention-item"><span class="dot"></span> 3 duplicate records</div>
-        <div class="attention-item"><span class="dot"></span> 5 records awaiting verification</div>
-      </div>
-      <div class="mt-12">
-        <a href="#" class="btn btn-outline">Review Data Quality →</a>
-      </div>
-    </section>
-
-    <!-- ===== 12. MY FIELD ACTIVITIES ===== -->
-    <section class="section">
-      <h2 class="section-title">Field Activity Tracker</h2>
-      <div class="field-card">
-        <div class="field-row">
-          <span class="label">Activity</span>
-          <span class="value">Community Monitoring Visit</span>
-        </div>
-        <div class="field-row">
-          <span class="label">Location</span>
-          <span class="value">Accra Metropolitan Area</span>
-        </div>
-        <div class="field-row">
-          <span class="label">Status</span>
-          <span class="value" style="color:var(--gayo-green);">Scheduled</span>
-        </div>
-        <div class="field-row">
-          <span class="label">Date</span>
-          <span class="value">17 September</span>
-        </div>
-        <div class="field-row">
-          <span class="label">Officer</span>
-          <span class="value">Michael A.</span>
-        </div>
-        <div class="field-row">
-          <span class="label">GPS</span>
-          <span class="value">Required</span>
-        </div>
-        <div class="field-row">
-          <span class="label">Evidence</span>
-          <span class="value">4 items expected</span>
-        </div>
-        <div class="mt-12">
-          <a href="#" class="btn btn-primary">Open Activity</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 13. RECENT ACTIVITY ===== -->
-    <section class="section">
-      <h2 class="section-title">My Recent Activity</h2>
-      <div class="activity-list">
-        <div class="activity-item">
-          <span class="time">10:42 AM</span>
-          <span class="desc">You approved 12 indicator submissions</span>
-        </div>
-        <div class="activity-item">
-          <span class="time">09:30 AM</span>
-          <span class="desc">You uploaded 4 project photographs</span>
-        </div>
-        <div class="activity-item">
-          <span class="time">Yesterday</span>
-          <span class="desc">You updated Project Workplan</span>
-        </div>
-        <div class="activity-item">
-          <span class="time">Yesterday</span>
-          <span class="desc">You completed Community Monitoring Activity</span>
-        </div>
-        <div class="activity-item">
-          <span class="time">Monday</span>
-          <span class="desc">—</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 14. NOTIFICATIONS ===== -->
-    <section class="section">
-      <h2 class="section-title">Notifications</h2>
-      <div class="notif-list">
-        <div class="notif-item">
-          <span class="notif-icon">🔔</span>
-          <div class="notif-body">
-            <div class="notif-title">Indicator deadline approaching</div>
-            <div class="notif-desc">Q3 results submission due today.</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <span class="notif-icon">➕</span>
-          <div class="notif-body">
-            <div class="notif-title">Approval requested</div>
-            <div class="notif-desc">Project Manager submitted budget revision.</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <span class="notif-icon">⚠️</span>
-          <div class="notif-body">
-            <div class="notif-title">Data quality issue</div>
-            <div class="notif-desc">5 submissions require verification.</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <span class="notif-icon">📋</span>
-          <div class="notif-body">
-            <div class="notif-title">New assignment</div>
-            <div class="notif-desc">You have been assigned a new field activity.</div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-8">
-        <a href="#" class="btn btn-ghost btn-sm">View All Notifications →</a>
-      </div>
-    </section>
-
-    <!-- ===== 15. PERSONAL PERFORMANCE ===== -->
-    <section class="section">
-      <h2 class="section-title">My Performance</h2>
-      <div class="perf-grid">
-        <div class="perf-card">
-          <div class="p-value">87%</div>
-          <div class="p-label">Activities completed on time</div>
-        </div>
-        <div class="perf-card">
-          <div class="p-value">91%</div>
-          <div class="p-label">On target</div>
-        </div>
-        <div class="perf-card">
-          <div class="p-value">96%</div>
-          <div class="p-label">Submission quality</div>
-        </div>
-        <div class="perf-card">
-          <div class="p-value">93%</div>
-          <div class="p-label">Tasks completed</div>
-        </div>
-      </div>
-      <div class="mt-12 text-sm text-muted">
-        Trend chart over the last six reporting periods — <em>visual placeholder</em>
-      </div>
-    </section>
-
-    <!-- ===== 16. QUICK ACTIONS ===== -->
-    <section class="section">
-      <h2 class="section-title">Quick Actions</h2>
-      <div class="quick-actions">
-        <a href="#" class="btn btn-primary">+ New Activity</a>
-        <a href="#" class="btn btn-primary">+ Submit Data</a>
-        <a href="#" class="btn btn-outline">+ Create Form</a>
-        <a href="#" class="btn btn-outline">+ Upload Evidence</a>
-        <a href="#" class="btn btn-outline">+ Add Beneficiary</a>
-        <a href="#" class="btn btn-outline">+ Upload Document</a>
-        <a href="#" class="btn btn-outline">+ Submit Report</a>
-      </div>
-      <div class="mt-8 text-sm text-muted">
-        Actions shown depend on your role permissions.
-      </div>
-    </section>
-
-    <!-- ===== 18. SMART WORKSPACE INSIGHT ===== -->
-    <section class="section">
-      <div class="insight-card">
-        <div class="insight-label">MIOMS Insight</div>
-        <div class="insight-text">
-          You have <strong>3 overdue activities</strong> across <strong>2 projects</strong>. One of these activities is linked to an indicator currently below target.
-        </div>
-        <div class="insight-action">
-          <a href="#" class="btn btn-primary btn-sm">Review Activity</a>
-          <a href="#" class="btn btn-ghost btn-sm">Dismiss</a>
-        </div>
-      </div>
-    </section>
-
-  </main>
+    </div>
+  </div>
 </div>
+
+<script>
+  // mobile nav toggle
+  const sidebar = document.getElementById('sidebar');
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+
+  // role-adaptive preview
+  const ROLE_INFO = {
+    pm:       { name:"Programme Manager", greet:"Good morning, Sarah.", sections:["pm"],       flow:"<b>Projects</b> → Activities → Indicators → Teams → Deliverables" },
+    exec:     { name:"Executive",         greet:"Good morning, Kwame.", sections:["exec"],     flow:"<b>Portfolio</b> → Financial Performance → Strategic KPIs → Alerts → Decision Support" },
+    director: { name:"Director",          greet:"Good morning, Abena.", sections:["director"], flow:"<b>Programmes</b> → Departments → Performance → Budgets → Reports" },
+    merl:     { name:"MERL Officer",      greet:"Good morning, Yaw.",   sections:["merl"],     flow:"<b>Indicators</b> → Data Quality → Verification → Evidence → Reporting" },
+    finance:  { name:"Finance",           greet:"Good morning, Efua.",  sections:["finance"],  flow:"<b>Budgets</b> → Expenditure → Financial Reports → Approvals" },
+    hr:       { name:"HR",                greet:"Good morning, Nana.",  sections:["hr"],       flow:"<b>Staff</b> → Personnel Records → HR Workflows" },
+    field:    { name:"Field Officer",     greet:"Good morning, Michael.", sections:["field"],  flow:"<b>Assigned Activities</b> → Data Collection → Beneficiaries → Evidence → GPS" },
+    country:  { name:"Country Office",    greet:"Good morning, Ama.",   sections:["country"],  flow:"<b>Country Projects</b> → Activities → Beneficiaries → Data → Reports" },
+    partner:  { name:"Partner",           greet:"Good morning, Kojo.",  sections:["partner"],  flow:"<b>Assigned Projects</b> → Activities → Data → Collaboration" }
+  };
+
+  const QUICK_ACTIONS = {
+    pm:       ["New Activity","Submit Data","Create Form","Upload Evidence","Add Beneficiary","Upload Document","Submit Report"],
+    exec:     ["View Portfolio","Review Reports","Access Analytics"],
+    director: ["Review Reports","Approve Budget","View Performance"],
+    merl:     ["Submit Data","Create Form","Upload Evidence","Verify Submission"],
+    finance:  ["Approve Budget","Review Expenditure","Generate Financial Report"],
+    hr:       ["Review Personnel Record","Approve Leave Request"],
+    field:    ["Submit Data","Upload Evidence","Update Activity"],
+    country:  ["Submit Report","Add Beneficiary","Upload Evidence"],
+    partner:  ["Submit Data","Upload Document"]
+  };
+
+  function iconSvg(){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+  }
+
+  const chips = document.querySelectorAll('.role-chip');
+  const sections = document.querySelectorAll('section.block[data-roles]');
+
+  function applyRole(role){
+    const info = ROLE_INFO[role];
+
+    chips.forEach(c => c.classList.toggle('active', c.dataset.role === role));
+    document.getElementById('sidebar-role').textContent = info.name;
+    document.getElementById('greetingText').textContent = info.greet;
+    document.getElementById('roleFocusName').textContent = info.name;
+    document.getElementById('roleFocusFlow').innerHTML = info.flow;
+
+    sections.forEach(sec => {
+      const roles = sec.dataset.roles.split(',');
+      sec.classList.toggle('hidden-role', !roles.includes(role));
+    });
+
+    const qaWrap = document.getElementById('quickActions');
+    qaWrap.innerHTML = QUICK_ACTIONS[role].map(label =>
+      `<button class="qa-btn">${iconSvg()}${label}</button>`
+    ).join('');
+  }
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => applyRole(chip.dataset.role));
+  });
+
+  applyRole('pm');
+</script>
 
 </body>
 </html>
